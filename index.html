@@ -1,1 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sahithi Yerramsetty | Data Engineer Portfolio</title>
+
+<style>
+  :root{
+    --pad: clamp(12px, 3vw, 24px);
+    --gap: clamp(12px, 3vw, 24px);
+    --card-radius: 12px;
+    --accent: #1DB954;
+    --bg: #121212;
+    --panel: #181818;
+  }
+
+  *{ box-sizing: border-box; }
+  img{ max-width: 100%; height: auto; }
+
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: var(--bg);
+    color: #fff;
+    display: flex;              /* desktop: sidebar + main */
+    min-height: 100vh;
+  }
+
+  /* Sidebar (desktop) / Topbar (mobile) */
+  .sidebar {
+    width: 220px;
+    background-color: #000;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .sidebar h2 {
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(18px, 2.5vw, 22px);
+  }
+
+  .sidebar h2 img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav {
+    display: block;
+  }
+
+  .nav a {
+    color: #b3b3b3;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    transition: color 0.3s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .nav a:hover,
+  .nav a.active {
+    color: var(--accent);
+  }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    padding: 30px 50px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .section {
+    display: none;
+    margin-bottom: 40px;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  .section h3 {
+    font-size: clamp(20px, 2.5vw, 24px);
+    margin-bottom: 20px;
+  }
+
+  /* Icon grid for Home */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 180px);
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+
+  .icon-card {
+    background-color: var(--panel);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s, background-color 0.3s, border-color 0.3s;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .icon-card:hover {
+    transform: scale(1.05);
+    background-color: #222;
+    border: 2px solid var(--accent);
+  }
+
+  .icon-card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+  }
+
+  .icon-card h4 {
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .icon-content {
+    display: none;
+    margin-top: 20px;
+    background-color: var(--panel);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .icon-content.active {
+    display: block;
+  }
+
+  /* Cards */
+  .card {
+    background-color: var(--panel);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: background 0.3s;
+  }
+
+  .card:hover { background-color: #282828; }
+  .card strong { color: var(--accent); }
+
+  /* Collapsible buttons */
+  .collapsible {
+    background-color: var(--panel);
+    color: #fff;
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .collapsible::after {
+    content: "▼";
+    position: absolute;
+    right: 20px;
+    font-size: 12px;
+    transition: transform 0.3s;
+  }
+
+  .activeCollapsible::after { transform: rotate(-180deg); }
+
+  .activeCollapsible,
+  .collapsible:hover { background-color: #282828; }
+
+  .content {
+    padding: 0 15px;
+    display: none;
+    overflow: hidden;
+    background-color: var(--bg);
+    margin-bottom: 10px;
+    border-left: 3px solid var(--accent);
+  }
+
+  /* Certifications Section */
+  #certifications {
+    margin-top: 40px;
+    text-align: center;
+    padding: 40px;
+  }
+
+  #certifications h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    justify-items: stretch;
+    align-items: start;
+    padding: 20px 0;
+  }
+
+  .cert-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  .cert-card img {
+    width: 90px;
+    height: auto;
+    margin-bottom: 12px;
+    border-radius: 6px;
+  }
+
+  .cert-card a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .cert-card a:hover { color: var(--accent); }
+
+  /* Contact & Resume Boxes */
+  .contact-box {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  .contact-box a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+    color: #b3b3b3;
+    font-size: 13px;
+  }
+
+  /* ======= Mobile / Tablet tweaks ======= */
+  @media (max-width: 1024px){
+    .icon-grid{
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--gap);
+    }
+  }
+
+  @media (max-width: 900px){
+    body { flex-direction: column; }
+
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: var(--pad);
+      border-bottom: 1px solid #222;
+    }
+
+    .sidebar h2 { margin-bottom: 8px; }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav a {
+      display: inline-block;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #0e0e0e;
+    }
+
+    .main {
+      padding: 16px;
+    }
+
+    .section { margin-bottom: 28px; }
+
+    .icon-card { padding: 18px; }
+
+    .collapsible { font-size: 15px; padding: 14px; }
+    .content { padding: 0 12px; }
+  }
+
+  @media (max-width: 640px){
+    .icon-grid{
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    }
+    .sidebar h2 img { width: 24px; height: 24px; }
+    footer { font-size: 12px; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar / Topbar -->
+<div class="sidebar">
+  <div>
+    <h2>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify Logo">
+      Sahithi's Portfolio
+    </h2>
+    <div class="nav">
+      <a class="active" onclick="showSection(event, 'home', this)">🏠 Home</a>
+      <a onclick="showSection(event, 'projects', this)">🧠 Projects</a>
+      <a onclick="showSection(event, 'certifications', this)">📜 Certifications</a>
+      <a onclick="showSection(event, 'resume', this)">📄 Resume</a>
+      <a onclick="showSection(event, 'contact', this)">📬 Contact Info</a>
+    </div>
+  </div>
+  <footer>© 2025 Sahithi Yerramsetty</footer>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Home Section -->
+  <div class="section active" id="home">
+    <h3>Welcome</h3>
+
+    <div class="icon-grid">
+      <div class="icon-card" onclick="toggleContent('aboutContent')">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="About">
+        <h4>About Me</h4>
+      </div>
+      <div class="icon-card" onclick="toggleContent('educationContent')">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="Education">
+        <h4>Education</h4>
+      </div>
+      <div class="icon-card" onclick="toggleContent('skillsContent')">
+        <img src="https://cdn-icons-png.flaticon.com/512/2721/2721299.png" alt="Skills">
+        <h4>Skills</h4>
+      </div>
+      <div class="icon-card" onclick="toggleContent('experienceContent')">
+        <img src="https://cdn-icons-png.flaticon.com/512/869/869636.png" alt="Work Experience">
+        <h4>Work Experience</h4>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div id="aboutContent" class="icon-content">
+      <p>Hi! I'm <strong>Sahithi Yerramsetty</strong></p>
+      <p>🎧 <strong>Now Playing: “Sahithi Yerramsetty – Turning Data Into Harmony”</strong></p>
+      <p><strong>Who I Am:</strong><br>
+      Hi! I’m <strong>Sahithi Yerramsetty</strong>, a passionate <strong>Data Engineer and Analyst</strong> who sees data as more than just rows and columns — to me, it’s rhythm, structure, and story all at once. I love designing data experiences that feel alive — transforming scattered, messy datasets into well-orchestrated pipelines that flow as seamlessly as a great song.</p>
+      <p><strong>Where It All Began:</strong><br>
+      My journey with data started during my undergrad, when I took a Python course and built a simple <strong>machine learning project that predicted YouTube ad views</strong>. It wasn’t a massive system, but seeing a model learn and forecast for the first time felt magical. That spark of turning raw data into something meaningful set me on a path I never looked back from.</p>
+      <p><strong>What Drives Me:</strong><br>
+      Since then, my curiosity for solving data puzzles has only grown. I’ve worked on real-world projects involving <strong>ETL optimization, data modeling, and visualization</strong>, where I’ve learned that data engineering isn’t just about efficiency — it’s about creativity. I enjoy exploring cloud ecosystems like <strong>Azure and AWS</strong>, orchestrating workflows in <strong>Databricks</strong>, and bringing data to life through tools like <strong>Power BI</strong> and <strong>Tableau</strong>.</p>
+      <p>For me, every dataset tells a story — and I love being the one who helps uncover it. Whether it’s debugging a complex SQL query, designing a scalable data architecture, or visualizing insights that drive decisions, I treat each challenge like composing a new track — balancing logic with imagination.</p>
+      <p><strong>My Work Philosophy:</strong><br>
+      I believe great data work blends <strong>precision, design, and empathy</strong>. Good data systems don’t just process — they communicate, they empower, they inspire. That’s why I’m constantly experimenting with new techniques, automations, and frameworks to make data not only accessible, but enjoyable to work with.</p>
+      <p><strong>What Roles I’m Interested In:</strong><br>
+      🎵 <strong>Data Engineering</strong> – Building reliable, scalable pipelines and data platforms that power intelligent systems.<br>
+      🎵 <strong>Data Science</strong> – Applying machine learning and statistical modeling to uncover patterns and drive smarter decisions.<br>
+      🎵 <strong>Software Engineering</strong> – Writing clean, efficient, and creative code that connects data to experience.</p>
+      <p>At heart, I’m a storyteller who uses data as my instrument — blending creativity with technical precision to craft meaningful experiences. For me, <strong>data engineering is where logic meets art</strong>, and I’m here to keep composing the next movement.</p>
+    </div>
+
+    <!-- Education -->
+    <div id="educationContent" class="icon-content">
+      <h2>🎓 Education</h2>
+      <ul>
+        <li>
+          <strong>Arizona State University (ASU)</strong>, Tempe, AZ, USA — 
+          <em>Master of Science in Information Technology</em> <span>(Jan 2024 – Dec 2025)</span><br>
+          <strong>GPA:</strong> 4.00 / 4.00
+          <ul>
+            <li><strong>Specialization:</strong> Data Engineering, Analytics, and Intelligent Information Systems</li>
+            <li><strong>Relevant Coursework:</strong></li>
+            <ul>
+              <li>Advanced Big Data Analytics</li>
+              <li>Natural Language Processing</li>
+              <li>Principles of Computer Information and Architecture</li>
+              <li>Data Visualization and Reporting</li>
+              <li>Advanced Database Management</li>
+              <li>Data in Cloud Information Technology</li>
+            </ul>
+            <li>Focused on designing <strong>scalable data pipelines</strong>, managing <strong>cloud-based architectures</strong>, and translating complex datasets into <strong>interactive, insight-driven visualizations</strong>.</li>
+            <li>Applied tools such as <strong>Python, SQL, Azure, Databricks, Power BI, and Tableau</strong> to build automated workflows and high-performance data systems.</li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>G. Narayanamma Institute of Technology and Science</strong> (Affiliated to JNTU), Hyderabad, India — 
+          <em>Bachelor of Technology in Electronics and Communication Engineering</em> <span>(Jul 2018 – Apr 2022)</span><br>
+          <strong>GPA:</strong> 8.51 / 10.00
+          <ul>
+            <li>Built a strong foundation in <strong>digital systems, embedded technologies, and communication networks</strong>.</li>
+            <li>Completed projects integrating <strong>signal processing</strong> and <strong>data analysis</strong>, sparking my interest in programming and data-driven systems.</li>
+            <li>Developed <strong>analytical and problem-solving skills</strong> that shaped my structured approach to <strong>data architecture, optimization, and engineering</strong>.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Skills -->
+    <div id="skillsContent" class="icon-content">
+      <h2>💡 Technical Skills</h2>
+      <ul>
+        <li>🎯 <strong>Programming:</strong> Python, Java, SQL, C, HTML/CSS, PHP</li>
+        <li>📊 <strong>Data Visualization:</strong> Power BI, Tableau, Excel, Matplotlib, Seaborn</li>
+        <li>🗄️ <strong>Databases:</strong> Oracle, MySQL, SQL Server, PostgreSQL</li>
+        <li>☁️ <strong>Cloud & DevOps:</strong> AWS, Azure, GCP, Databricks, Docker, Kubernetes, Jira, Git, ServiceNow</li>
+        <li>⚙️ <strong>Frameworks & Libraries:</strong> PySpark, Pandas, NumPy, Scikit-learn, Flask</li>
+      </ul>
+
+      <h2>🤝 Soft Skills</h2>
+      <ul>
+        <li>🧠 <strong>Analytical Thinking:</strong> Skilled at breaking down complex problems and deriving actionable insights from data.</li>
+        <li>💬 <strong>Communication:</strong> Able to explain technical concepts clearly to both technical and non-technical audiences.</li>
+        <li>👩‍💻 <strong>Collaboration:</strong> Experienced working in agile, cross-functional teams to deliver data-driven solutions efficiently.</li>
+        <li>🚀 <strong>Adaptability:</strong> Thrive in fast-paced environments and enjoy learning new tools and technologies quickly.</li>
+        <li>🎨 <strong>Creativity:</strong> Combine logic and design thinking to create elegant, impactful data solutions.</li>
+        <li>🎯 <strong>Attention to Detail:</strong> Ensure data accuracy, system reliability, and seamless user experience in every project.</li>
+      </ul>
+    </div>
+
+    <!-- Work Experience -->
+    <div id="experienceContent" class="icon-content">
+      <h2>💼 Work Experience</h2>
+      <ul>
+        <li>
+          <strong>Data Analyst – Deloitte USI (Kroger Pharmaceuticals)</strong> 
+          <span>(Hyderabad, India | Sept 2022 – Dec 2023)</span>
+          <ul>
+            <li>🧩 Managed and refined daily <strong>ETL processes</strong> validating <strong>3TB+</strong> of EPRN data across multiple databases, ensuring <strong>99.9% data accuracy</strong> and reliability for downstream analytics.</li>
+            <li>📊 Developed and integrated <strong>15+ pharmaceutical data models</strong> combining clinical, sales, and supply chain data, enabling unified business reporting and faster insights.</li>
+            <li>⚡ Optimized <strong>Azure and Databricks pipelines</strong> processing <strong>400M+ records/day</strong>, improving data efficiency and runtime by <strong>35%</strong>.</li>
+            <li>📈 Built and maintained <strong>7 interactive Power BI dashboards</strong> using curated Synapse views, driving <strong>20% faster decision-making</strong> across departments.</li>
+            <li>🤖 Automated <strong>SQL script generation</strong> using Python, reducing manual script creation time by <strong>33%</strong> and standardizing ETL logic.</li>
+            <li>🛠️ Monitored and resolved <strong>P1/P2 incidents</strong> via ServiceNow to maintain uninterrupted data workflows and high system uptime.</li>
+            <li>🔗 Designed and tested <strong>custom data feeds for AbbVie Pharmaceuticals</strong>, enhancing delivery precision by <strong>15%</strong>.</li>
+            <li>✅ Enhanced automated testing frameworks, reducing validation time by <strong>32%</strong> and improving error detection by <strong>13%</strong>.</li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>Data Science Intern – Internship Studio</strong> 
+          <span>(Hyderabad, India | Dec 2020 – Jan 2021)</span>
+          <ul>
+            <li>🧠 Built a <strong>Random Forest Regression model</strong> to predict YouTube ad views using historical data, achieving <strong>94.3% accuracy</strong>.</li>
+            <li>🧹 Processed, cleaned, and optimized large datasets to ensure high-quality training data and consistent performance.</li>
+            <li>🔍 Tuned hyperparameters via <strong>Grid Search</strong> and applied <strong>Cross-Validation</strong> techniques to enhance model reliability and generalization.</li>
+            <li>📊 Delivered visual performance summaries and actionable insights to demonstrate business value and audience engagement trends.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Projects Section -->
+  <div class="section" id="projects"> 
+    <h3>Projects</h3> 
+
+    <button class="collapsible">Real-Time Data Pipeline on Azure</button> 
+    <div class="content">
+      <p>Developed a real-time data pipeline on Azure improving deployment efficiency by 25%.</p> 
+      <p>Co-created TechDocs Platform using Spring Boot, MySQL, Azure Blob Storage, and React.js to enable seamless document management.</p> 
+      <p>Integrated JWT-based Role-Based Access Control (RBAC) for secure, user-specific document access and management.</p> 
+      <p>Optimized data storage and retrieval processes, reducing latency in document access by 15%.</p> 
+      <p>Spearheaded design and implementation of RESTful APIs for TechDocs, ensuring smooth interaction between front-end and back-end systems.</p> 
+      <p>Led a team of developers to implement real-time data processing, ensuring high availability and fault tolerance.</p> 
+      <p>Ensured scalability and security of the solution by leveraging Azure cloud infrastructure and implementing best practices for data encryption and user authentication.</p> 
+      <p>Collaborated with cross-functional teams to refine the system and incorporate real-time feedback to drive continuous improvement.</p> 
+      <p><strong>GitHub Repository:</strong> <a href="https://github.com/srilathamummadi/GL-IIITH-TechDocs" target="_blank" rel="noopener noreferrer"> TechDocs on GitHub </a></p> 
+    </div>
+
+    <button class="collapsible">Bank Survey ML Model</button>
+    <div class="content">
+      <p>Designed and built interactive Power BI dashboards for exec/stakeholder review, automating weekly analytics and cutting manual reporting time by 40%.</p>
+      <p>Ingested, cleaned, and standardized large-scale banking survey data using Python and PySpark; reduced the impact of missing/inconsistent fields by 15% via imputation and validation rules.</p>
+      <p>Engineered a feature pipeline (demographics, product mix, tenure, channel usage, NPS verbatims → text signals) and created target labels for churn/upsell intent.</p>
+      <p>Applied and compared classification &amp; regression models (Logistic Regression, Random Forest, XGBoost/GBT); achieved 92% overall accuracy on churn intent with stratified hold-out and 5-fold cross-validation.</p>
+      <p>Tuned models with GridSearch/Hyperopt, monitored precision/recall and ROC-AUC, and set thresholds to maximize business impact (reduced false positives on high-value segments).</p>
+      <p>Built data quality checks (schema, null %, range/logic tests) and drift alerts for input features, improving reliability of weekly refreshes.</p>
+      <p>Implemented a reproducible ETL: raw → cleaned (Silver) → features/predictions (Gold) in Parquet/Delta; scheduled with Databricks Jobs/Airflow.</p>
+      <p>Created model explainability views (feature importance, SHAP-style summaries) to help product/marketing understand drivers of satisfaction and churn.</p>
+      <p>Partnered with marketing to define actionable cohorts (e.g., high-risk/high-value customers) and documented playbooks for retention offers.</p>
+      <p>Added a go/no-go QA checklist: data freshness, sample size, KPI deltas; reduced broken refreshes and rework.</p>
+      <p>Secured PII with role-based access and masked sensitive fields; published a data dictionary and dashboard usage guide.</p>
+      <p><strong>Tech:</strong> Python, PySpark, Pandas, scikit-learn, XGBoost/GBT, Databricks, Delta/Parquet, Airflow/Jobs, Power BI, Git</p>
+    </div>
+
+    <button class="collapsible">Gym Members Exercise Analytics Dashboard</button>
+    <div class="content">
+      <p>I turned a raw gym dataset (age, gender, workout type, duration, calories, heart rate, time-of-day) into an interactive dashboard that coaches and ops teams can actually use. Instead of one-off charts, I designed a flow that answers “what’s popular, who does it, and how hard are they training?” in a few clicks.</p>
+      <p>Data prep included standardizing workout names (Cardio/Strength/Flexibility/Mixed), fixing inconsistent capitalization, removing duplicates, and imputing short gaps in duration. I created calculated fields like <em>Workout Intensity = Calories ÷ Duration</em> and <em>Age Buckets</em> (18–25, 26–35, 36–45, 46+), which made comparisons obvious across demographics.</p>
+      <p>The final dashboard has three decision-first views: (1) <strong>Engagement</strong> – which workouts are most used by gender/age, (2) <strong>Performance</strong> – average calories and heart rate to highlight high-effort sessions, and (3) <strong>Member Profiling</strong> – when members train and how their mix changes over time. Global filters (gender, workout type, age bucket, time window) let non-technical users slice insights safely.</p>
+      <p>Outcome: one place to compare exercises across groups, spot peak times, and plan programs with evidence. The structure also supports “what changed this month vs last?” by simply adjusting the time filter.</p>
+    </div>
+
+    <button class="collapsible">Personalized Book Recommendation System</button>
+    <div class="content">
+      <p>I built a user-based collaborative filtering recommender that outputs “people like you also enjoyed …”. The pipeline cleans noisy ratings (removes exact duplicates, drops invalid IDs), maps external keys (User-ID/ISBN) to internal numeric IDs, and constructs a sparse user–item matrix that’s efficient for similarity search.</p>
+      <p><strong>How I used ML:</strong> I framed recommendation as a nearest-neighbors problem on user preference vectors. After transforming ratings to a normalized preference space (mean-centered; optional binarization for implicit feedback), I used a cosine-similarity KNN model to retrieve the top-<em>k</em> neighbors for each active user. I then scored candidate books with a weighted sum over neighbor similarities and applied ranking metrics—<em>Precision@K</em>, <em>Recall@K</em>, and <em>nDCG@K</em>—on a hold-out set using time-based or stratified splits. I compared this to two ML baselines: (1) a popularity-only model and (2) a matrix-factorization variant (implicit ALS) to show uplift over non-personalized methods.</p>
+      <p>For recommendations, I calculate cosine similarity to get the top-<em>k</em> nearest neighbors for an active user, gather books those neighbors liked that the user hasn’t seen, and return a ranked list. I then join back to the books metadata so results are human-readable (title, author, year) instead of raw IDs.</p>
+      <p>The code is modular: <em>ingest → clean → build matrix → recommend → evaluate → present</em>. It’s easy to swap distance metrics (cosine, dot, Jaccard), tune <em>k</em> and rating thresholds, switch to item-based CF for very sparse data, or plug in matrix factorization (ALS/SVD) when scale grows.</p>
+      <p><strong>Tech used:</strong> Python; pandas &amp; NumPy for data wrangling; SciPy <code>csr_matrix</code> for sparse user–item matrices; scikit-learn (<code>NearestNeighbors</code>, model selection utilities) for KNN-based CF and evaluation; optional <em>implicit</em>/<em>Surprise</em> libraries for ALS/SVD baselines; Matplotlib for quick diagnostics; CSV/Parquet for artifacts; Jupyter/Colab for experimentation; (optional) PySpark/Databricks when scaling to larger datasets.</p>
+      <p>Outcome: a clear end-to-end example of data engineering + ML for recommenders, from messy CSV to explainable suggestions and offline metrics you can show in a UI or export as a CSV for stakeholders.</p>
+    </div>
+
+    <button class="collapsible">Paralympic Athlete Event Management Database</button>
+    <div class="content">
+      <p>I designed a relational database (SQL Server) for a Paralympic-style event with tables for Countries, Athletes, Events, Event_Results, Medals, Tickets, and Volunteers. Every table has a clean primary key and foreign keys to enforce referential integrity, so invalid references (e.g., an athlete tied to a non-existent country) are impossible.</p>
+      <p>Data modeling followed 3NF: entity tables (Countries, Athletes, Events, Venues) are separated from transactional tables (Event_Results, Tickets, Volunteer_Assignments). Surrogate keys (INT IDENTITY) are used for stability, while natural keys (e.g., ISO country codes) are constrained as UNIQUE for fast lookups. Many-to-many relationships (e.g., Volunteers ↔ Events) are handled via junction tables with composite keys.</p>
+      <p>To make analytics self-serve, I created views such as <em>v_MedalWinners</em> (fast medal rollups by event/country/classification) and <em>v_TicketSales</em> (daily revenue by event/venue). These views pre-join the minimum set of tables and expose consistent column names for BI tools, so analysts don’t have to write complex joins repeatedly.</p>
+      <p>For governance and traceability, I added an <strong>audit table</strong> with an <strong>AFTER UPDATE/INSERT trigger</strong> on Event_Results and Tickets that captures who changed what and when (old/new values, user, timestamp). This enables post-event reconciliation and supports compliance requirements without granting broad write access.</p>
+      <p>I implemented a parameterized <strong>stored procedure</strong> (e.g., <code>dbo.GetAthletesByCountryOrEvent</code>) that returns athletes filtered by <code>@CountryId</code> and/or <code>@EventId</code>, with safe defaults and input validation. Common app/report flows call this SP instead of crafting raw SQL, improving reuse, plan caching, and security.</p>
+      <p>Performance was addressed with targeted <strong>nonclustered indexes</strong> on high-selectivity columns (Event_Results.EventId, Tickets.EventId, Athletes.CountryId). Covering indexes support frequent BI queries, while partitioning by EventDate can be enabled for very large seasons. Query plans were checked to avoid key lookups and ensure SARGable predicates.</p>
+      <p>Quality and consistency rules are enforced with <strong>CHECK constraints</strong> (valid medal types, non-negative ticket quantities/price), NOT NULL on required fields, and cascaded updates/deletes only where domain rules allow them. Reference data (countries, venues, classifications) is loaded via seed scripts and protected by limited DML privileges.</p>
+      <p>Security follows least-privilege: application logins map to a read-only role for views and SPs; write permissions are restricted to service accounts. PII (if stored) is masked in views, and access is mediated through stored procedures. Backups use full + differential + log strategy; a lightweight migration script (DDL + seed) initializes new environments.</p>
+      <p>Outcome: a production-style schema that answers real operator questions (“who won yesterday?”, “what was revenue per event/venue?”, “which volunteer covered which session?”) with fast, reliable queries. The combination of views, stored procedures, indexing, and auditing demonstrates practical data engineering for transactional + reporting workloads.</p>
+      <p><strong>Tech used:</strong> SQL Server, T-SQL, Views, Stored Procedures, Triggers, Indexing (clustered/nonclustered), Constraints (PK/FK/UNIQUE/CHECK), Transaction handling, Backup/Restore strategy, and BI consumption via Power BI/Tableau.</p>
+    </div>
+  </div>
+
+  <!-- Certifications Section -->
+  <div class="section" id="certifications">
+    <h3>Certifications</h3>
+    <div class="cert-grid">
+      <!-- Microsoft Certification -->
+      <div class="cert-card">
+        <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-fundamentals-badge.svg" alt="DP-900 Badge">
+        <p><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/certs/DP-900_Cer.pdf" target="_blank" rel="noopener noreferrer">Microsoft Certified: Azure Data Fundamentals (DP-900)</a></p>
+      </div>
+
+      <!-- Deloitte Certification -->
+      <div class="cert-card">
+        <img src="https://raw.githubusercontent.com/sahithi-yerramsetty/portfolio/main/logos/deloitte.png" alt="Deloitte AI Academy">
+        <p><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/certs/Deloitte_AI_Academy_USI_Certificate_Yerramsetty%20Sahithi.pdf" target="_blank" rel="noopener noreferrer">Deloitte AI Academy Certification</a></p>
+      </div>
+
+      <!-- SEDS Certification -->
+      <div class="cert-card">
+        <img src="https://raw.githubusercontent.com/sahithi-yerramsetty/portfolio/main/logos/IITHYD.png" alt="IIIT Hyderabad SEDS program">
+        <p><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/certs/SAHITHI%20YERRAMSETTY%20-%20great_learningpdf.pdf" target="_blank" rel="noopener noreferrer">Software Engineering For Data Science</a></p>
+      </div>
+      
+      <!-- AWS-DE Certification -->
+      <div class="cert-card">
+        <img src="https://raw.githubusercontent.com/sahithi-yerramsetty/portfolio/main/certs/aws-academy-graduate-data-engineering-training-badg.png" alt="AWS Academy Data Engineering Badge">
+        <p><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/certs/DEcertificate.pdf" target="_blank" rel="noopener noreferrer">Data Engineering</a></p>
+      </div>
+
+      <!-- AWS-ML Foundations Certification -->
+      <div class="cert-card">
+        <img src="https://raw.githubusercontent.com/sahithi-yerramsetty/portfolio/main/certs/aws-academy-graduate-machine-learning-foundations-t.png" alt="AWS Academy ML Foundations Badge">
+        <p><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/certs/MLFoundations.pdf" target="_blank" rel="noopener noreferrer">Machine Learning Foundations</a></p>
+      </div>
+
+      <!-- AWS-ML in NLP Certification -->
+      <div class="cert-card">
+        <img src="https://raw.githubusercontent.com/sahithi-yerramsetty/portfolio/main/certs/aws-academy-graduate-machine-learning-for-natural-l.png" alt="AWS Academy ML for NLP Badge">
+        <p><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/certs/MLinNLP.pdf" target="_blank" rel="noopener noreferrer">Machine Learning for NLP</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Resume Section -->
+  <div class="section" id="resume">
+    <h3>Resume</h3>
+    <div class="contact-box">
+      <strong>Resume:</strong>
+      <span><a href="https://github.com/sahithi-yerramsetty/portfolio/blob/main/Sahithi_Yerramsetty_CV_SDE.pdf" target="_blank" rel="noopener noreferrer">View/Download Resume</a></span>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="section" id="contact">
+    <h3>Contact Info</h3>
+    <div class="contact-box"><strong>Email:</strong> <span>sahithi.us36@gmail.com</span></div>
+    <div class="contact-box"><strong>Phone:</strong> <span>+1 (623)-297-1556</span></div>
+    <div class="contact-box"><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/sahithi-yerramsetty" target="_blank" rel="noopener noreferrer">linkedin.com/in/sahithi-yerramsetty</a></div>
+    <div class="contact-box"><strong>GitHub:</strong> <a href="https://github.com/sahithi-yerramsetty" target="_blank" rel="noopener noreferrer">github.com/sahithi-yerramsetty</a></div>
+  </div>
+
+</div>
+
+<script>
+  function showSection(evt, sectionId, linkEl) {
+    // Switch visible sections
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    const next = document.getElementById(sectionId);
+    if (next) next.classList.add('active');
+
+    // Update sidebar/topbar active link
+    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+    if (linkEl) linkEl.classList.add('active');
+
+    if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
+  }
+
+  function toggleContent(id) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.classList.toggle('active');
+    }
+  }
+
+  // Collapsibles
+  const collapsibles = document.querySelectorAll('.collapsible');
+  collapsibles.forEach(button => {
+    button.addEventListener('click', function() {
+      this.classList.toggle('activeCollapsible');
+      const content = this.nextElementSibling;
+      if (content) {
+        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
 
